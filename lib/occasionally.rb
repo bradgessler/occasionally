@@ -65,10 +65,19 @@ module Occassionally
   class DSL
     def initialize(schedule)
       @schedule = schedule
+      @runner = Runner.new(@schedule)
     end
 
     def every(interval, &block)
       @schedule.jobs << Job.new(interval: interval.to_i, &block)
+    end
+
+    def run
+      @runner.run
+    end
+
+    def logger(logger)
+      @runner.logger = logger
     end
   end
 
@@ -80,11 +89,7 @@ module Occassionally
     end
 
     def configure(schedule, &block)
-      block.call DSL.new(schedule)
-    end
-
-    def run(&block)
-      Runner.new(schedule(&block)).run
+      DSL.new(schedule).instance_eval(&block)
     end
   end
 end

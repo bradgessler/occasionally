@@ -17,14 +17,18 @@ If bundler is not being used to manage dependencies, install the gem by executin
 Create the following file in `./config/initializers/occasionally.rb`
 
 ```ruby
-Occassionally.run do |s|
-  s.every 1 do
+Occassionally.schedule do
+  every 60 do
     puts "hey! Its #{Time.now}"
   end
 
-  s.every 5 do
-    puts "Looks like another 20 seconds have passed"
+  every 5 do
+    puts "Looks like another 5 seconds have passed"
   end
+
+  logger Rails.logger
+
+  run if true # Or more likely `run if ENV.key? "PRIMARY_NODE"`
 end
 ```
 
